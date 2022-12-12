@@ -4,13 +4,12 @@ using UnityEngine;
 
 public class Selectable : MonoBehaviour
 {
-    public ChessBoard Board;
-    public Transform Piece;
+    ChessBoard Board;
     void OnMouseDown(){
-        Board.Select(Piece);
+        Board.Select(gameObject.transform);
     }
     public void LoadBoard(){
-        Transform cur = Piece;
+        Transform cur = gameObject.transform;
         while(cur.parent){
             cur = cur.parent;
             if(cur.gameObject.GetComponent<ChessBoard>()){ // set our board
