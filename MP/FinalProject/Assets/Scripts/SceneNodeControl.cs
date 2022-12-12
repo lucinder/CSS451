@@ -8,6 +8,7 @@ public class SceneNodeControl : MonoBehaviour {
     public SceneNode TheRoot = null;
     public ObjectControlUIScript XformControl = null;
     public Transform axis = null;
+    bool active = false;
 
     const string kChildSpace = "  ";
     List<Dropdown.OptionData> mSelectMenuOptions = new List<Dropdown.OptionData>();
@@ -26,6 +27,7 @@ public class SceneNodeControl : MonoBehaviour {
         TheMenu.onValueChanged.AddListener(SelectionChange);
 
         XformControl.SetSelectedObject(TheRoot.transform);
+        gameObject.SetActive(false);
     }
 
     void GetChildrenNames(string blanks, Transform node)
@@ -37,8 +39,10 @@ public class SceneNodeControl : MonoBehaviour {
             SceneNode cn = child.GetComponent<SceneNode>();
             if (cn != null)
             {
-                mSelectMenuOptions.Add(new Dropdown.OptionData(space + child.name));
-                mSelectedTransform.Add(child);
+                if(cn.name.Equals("LowerJoint") || cn.name.Equals("UpperJoint")){
+                    mSelectMenuOptions.Add(new Dropdown.OptionData(space + child.name));
+                    mSelectedTransform.Add(child);
+                }
                 GetChildrenNames(blanks + kChildSpace, child);
             }
         }
@@ -49,5 +53,11 @@ public class SceneNodeControl : MonoBehaviour {
         Transform cur = mSelectedTransform[index];
         XformControl.SetSelectedObject(cur);
         axis.localPosition = cur.localPosition;
+    }
+
+    public void ToggleActive(){
+        active = !active;
+        if(active) gameObject.SetActive(true);
+        else gameObject.SetActive(false);
     }
 }

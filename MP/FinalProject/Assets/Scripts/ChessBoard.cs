@@ -1,10 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ChessBoard : MonoBehaviour
 {
-    public Transform selected, LookAt;
+    public Transform selected, LookAt, Joint1, Joint2;
     public GameObject PawnW,PawnB,RookW,RookB,KnightW,KnightB,BishopW,BishopB,QueenW,QueenB,KingW,KingB; // prefabs
     enum Turn{WHITE, BLACK};
     Turn current = Turn.WHITE;
@@ -14,6 +15,7 @@ public class ChessBoard : MonoBehaviour
     IDictionary<string,int> ColumnMap = new Dictionary<string,int>();
     IDictionary<string,int> RowMap = new Dictionary<string,int>();
     public Camera Camera1, Camera2;
+    public Text turnOut,moveOut;
     // Start is called before the first frame update
     void Start()
     {
@@ -394,7 +396,7 @@ public class ChessBoard : MonoBehaviour
                         Debug.Log("Added a valid tile for rook!");
                     }
                 }
-                if((i+k) >= 0 && !Lin2Stopped){
+                if((i+k) <= 7 && !Lin2Stopped){
                     if(Occupied(i+k,j)) Lin2Stopped = true;
                     if(!OccupiedByAlly(i+k,j)){
                         ValidTiles.Add(AllTiles[i+k][j]);
@@ -408,7 +410,7 @@ public class ChessBoard : MonoBehaviour
                         Debug.Log("Added a valid tile for rook!");
                     }
                 }
-                if((j+k) >= 0 && !Lin4Stopped){
+                if((j+k) <= 7 && !Lin4Stopped){
                     if(Occupied(i,j+k)) Lin4Stopped = true;
                     if(!OccupiedByAlly(i,j+k)){
                         ValidTiles.Add(AllTiles[i][j+k]);
@@ -463,9 +465,16 @@ public class ChessBoard : MonoBehaviour
 
     void TurnSwitch(){
         turnCtr++;
-        Debug.Log("Current turn is now " + turnCtr);
-        if(current == Turn.WHITE) current = Turn.BLACK;
-        else current = Turn.WHITE;
+        turnOut.text = "Turn " + turnCtr;
+        // Debug.Log("Current turn is now " + turnCtr);
+        if(current == Turn.WHITE){
+            current = Turn.BLACK;
+            moveOut.text = "Black to move";
+        } else {
+            current = Turn.WHITE;
+            moveOut.text = "White to move";
+        }
+        
         if(Camera1.depth == 0){ // switch cameras
             Destroy(Camera1.GetComponent<CameraManipulation>()); // remove manipulation from camera 1
             Camera2.gameObject.AddComponent<CameraManipulation>(); // add manipulation to camera 2

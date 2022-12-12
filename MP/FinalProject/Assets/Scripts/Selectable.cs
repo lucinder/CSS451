@@ -18,4 +18,7 @@ public class Selectable : MonoBehaviour
             }
         }
     }
+    public Transform GetBoard(){
+        return Board.gameObject.transform;
+    }
 }
